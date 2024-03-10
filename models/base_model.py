@@ -1,9 +1,6 @@
-#!/usr/bin/python3
-"""Defines the BaseModel class."""
 from uuid import uuid4
 from datetime import datetime
 import models
-
 
 class BaseModel:
     """Represents the BaseModel of the HBnB project."""
@@ -16,6 +13,9 @@ class BaseModel:
             **kwargs (dict): Key/value pairs of attributes.
         """
         tform = "%Y-%m-%dT%H:%M:%S.%f"
+        self.id = str(uuid4())
+        self.created_at = datetime.today()
+        self.updated_at = datetime.today()
         if kwargs:
             for k, v in kwargs.items():
                 if k == "created_at" or k == "updated_at":
@@ -23,14 +23,11 @@ class BaseModel:
                 elif k != "__class__":
                     setattr(self, k, v)
         else:
-            self.id = str(uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
             models.storage.new(self)
 
     def save(self):
         """Update updated_at with the current datetime."""
-        self.updated_at = datetime.now()
+        self.updated_at = datetime.today()
         models.storage.save()
 
     def to_dict(self):
@@ -49,4 +46,5 @@ class BaseModel:
         """Return the print/str representation of the BaseModel instance."""
         clname = self.__class__.__name__
         return "[{}] ({}) {}".format(clname, self.id, self.__dict__)
+
 
